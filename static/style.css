@@ -1,0 +1,20 @@
+body {
+  padding-top: 3em;
+}
+
+samp, .samp, code, .code, kbd, .kbd {
+  padding: 0.25em 0.5em;
+}
+
+samp, .samp, code, .code, kbd, .kbd, .source-code-pro {
+  font-family: "Source Code Pro", monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.caveat-brush-regular {
+  font-family: "Caveat Brush", cursive;
+  font-weight: 400;
+  font-style: normal;
+}

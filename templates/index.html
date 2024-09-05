@@ -1,0 +1,89 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Raid Time!</title>
+    <meta name="description" content="rekyuu">
+    <meta name="author" content="rekyuu">
+
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Source+Code+Pro:wght@600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+</head>
+
+<body class="bg-dark text-light">
+    <div class="container">
+        <div class="text-center">
+            <h1><samp id="pfCode" class="bg-primary c-hand" onclick="copyPfCode()">{{ pf_code }}</samp></h1>
+            <p><i>PF code resets at midnight PST</i></p>
+
+            <br />
+
+            <h1 class="text-error caveat-brush-regular">When's the next raid?</h1>
+            <h2 id="nextRaidTime">it is a mystery...</h2>
+            <samp id="discordMessage" class="bg-primary c-hand" onclick="copyDiscordMessage()">Next raid is at &lt;t:{{ next_raid_time }}:F&gt; (&lt;t:{{ next_raid_time }}:R&gt;)</samp>
+        </div>
+    </div>
+</body>
+
+<script>
+    let nextRaidTime = new Date({{ next_raid_time }} * 1000);
+
+    function copyPfCode() {
+        let copyText = document.getElementById("pfCode");
+        navigator.clipboard.writeText(copyText.textContent);
+    }
+
+    function copyDiscordMessage() {
+        let copyText = document.getElementById("discordMessage");
+        navigator.clipboard.writeText(copyText.textContent);
+    }
+
+    // Code stolen from https://r.3v.fi/discord-timestamps/
+    function relativeDifference(d) {
+        const diff = -((new Date().getTime() - d.getTime()) / 1000) | 0;
+        const absDiff = Math.abs(diff);
+
+        if (absDiff > 86400 * 30 * 10) {
+            return { duration: Math.round(diff / (86400 * 365)), unit: 'years' };
+        }
+
+        if (absDiff > 86400 * 25) {
+            return { duration: Math.round(diff / (86400 * 30)), unit: 'months' };
+        }
+
+        if (absDiff > 3600 * 21) {
+            return { duration: Math.round(diff / 86400), unit: 'days' };
+        }
+
+        if (absDiff > 60 * 44) {
+            return { duration: Math.round(diff / 3600), unit: 'hours' };
+        }
+
+        if (absDiff > 30) {
+            return { duration: Math.round(diff / 60), unit: 'minutes' };
+        }
+
+        return { duration: diff, unit: 'seconds' };
+    }
+
+    const fullDateFormatter = new Intl.DateTimeFormat(navigator.language || 'en', { dateStyle: 'full', timeStyle: 'short' });
+    const fullDateStr = fullDateFormatter.format(nextRaidTime);
+
+    const relativeFormatter = new Intl.RelativeTimeFormat(navigator.language || 'en', { style: 'long', numeric: 'auto' });
+    const relativeFormat = relativeDifference(nextRaidTime);
+    const relativeDateStr = relativeFormatter.format(relativeFormat.duration, relativeFormat.unit);
+
+    document.getElementById("nextRaidTime").textContent = `${fullDateStr} (${relativeDateStr})`;
+</script>
+
+</html>
