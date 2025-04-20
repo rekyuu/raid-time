@@ -6,11 +6,11 @@ from zoneinfo import ZoneInfo
 
 SCHEDULE_MST = {
     "mon": None,
-    "tue": (19.0, 21.5),
-    "wed": (18.5, 21.0),
-    "thu": None,
-    "fri": (18.5, 21.5),
-    "sat": None,
+    "tue": (18.0, 20.0),
+    "wed": None,
+    "thu": (17.5, 20.0),
+    "fri": None,
+    "sat": (17.5, 20.0),
     "sun": None,
 }
 
